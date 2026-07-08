@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>You're Invited: Keep Talking and Nobody Explodes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A date night invitation to play Keep Talking and Nobody Explodes with Guido.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2218%22 r=%2212%22 fill=%22%232b2e33%22/><rect x=%2213%22 y=%224%22 width=%223%22 height=%228%22 fill=%22%23ff8a3c%22/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="locked">
+
+<a href="#invitation" class="skip-link" id="skip-link">Skip intro, show invitation</a>
+
+<!-- ============================================================ -->
+<!-- BOMB STAGE — the first thing the guest sees                   -->
+<!-- ============================================================ -->
+<div id="bomb-stage">
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="bomb-stage-inner">
+    <p class="bomb-eyebrow">// DEVICE ARMED — HANDLE WITH CARE</p>
+
+    <button id="bomb-trigger" class="bomb-trigger" aria-label="Activate the device to reveal your invitation" type="button">
+      <svg id="bomb-svg" viewBox="0 0 400 400" width="300" height="300" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="bombBodyGradient" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#5a5f68"/>
+            <stop offset="55%" stop-color="#2b2e33"/>
+            <stop offset="100%" stop-color="#0d0e10"/>
+          </radialGradient>
+          <linearGradient id="flameOuter" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.9"/>
+            <stop offset="55%" stop-color="#ffb020"/>
+            <stop offset="100%" stop-color="#fff3c4"/>
+          </linearGradient>
+          <pattern id="hazardStripes" width="24" height="24" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <rect width="24" height="24" fill="#1a1a1a"/>
+            <rect width="12" height="24" fill="#ffb020"/>
+          </pattern>
+          <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <ellipse id="bomb-shadow" cx="200" cy="332" rx="112" ry="18" fill="#000" opacity="0.55"/>
+
+        <g id="bomb-group">
+          <circle class="bolt" cx="118" cy="152" r="7" fill="#111" stroke="#4b4f57" stroke-width="2"/>
+          <circle class="bolt" cx="282" cy="152" r="7" fill="#111" stroke="#4b4f57" stroke-width="2"/>
+
+          <rect id="bomb-body" x="80" y="140" width="240" height="200" rx="100"
+                fill="url(#bombBodyGradient)" stroke="#000" stroke-width="4"/>
+
+          <rect id="warning-stripe" x="80" y="288" width="240" height="16" fill="url(#hazardStripes)" opacity="0.9"/>
+
+          <rect id="bomb-screen" x="150" y="188" width="100" height="46" rx="6" fill="#050505" stroke="#3a3a3a" stroke-width="3"/>
+          <text id="bomb-timer" x="200" y="220" text-anchor="middle" class="led-text">03<tspan class="led-colon">:</tspan>23</text>
+
+          <path id="fuse-path" d="M200,140 C188,102 220,72 204,38"
+                stroke="#5a4632" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+          <g id="flame-group" transform="translate(204,38)" opacity="0">
+            <path class="flame flame-outer" d="M0,-18 C10,-8 8,4 0,14 C-8,4 -10,-8 0,-18Z" fill="url(#flameOuter)" filter="url(#glow)"/>
+            <path class="flame flame-inner" d="M0,-10 C5,-4 4,3 0,8 C-4,3 -5,-4 0,-10Z" fill="#fff3c4"/>
+            <circle class="spark spark-1" cx="5" cy="-8" r="1.6" fill="#ffcf5c"/>
+            <circle class="spark spark-2" cx="-4" cy="1" r="1.2" fill="#ffcf5c"/>
+            <circle class="spark spark-3" cx="2" cy="-3" r="1.1" fill="#ffcf5c"/>
+          </g>
+        </g>
+      </svg>
+    </button>
+
+    <p class="bomb-hint">Hover the device. Click to defuse the invitation.</p>
+  </div>
+
+  <div id="explosion-flash" aria-hidden="true"></div>
+  <div id="shockwave" aria-hidden="true"></div>
+  <div id="particle-field" aria-hidden="true"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- INVITATION — revealed after the bomb detonates                -->
+<!-- ============================================================ -->
+<main id="invitation">
+  <div class="grid-overlay grid-overlay--faint" aria-hidden="true"></div>
+
+  <section class="invite-hero">
+    <p class="eyebrow">// TRANSMISSION RECEIVED</p>
+    <h1 id="invitation-headline" class="headline" tabindex="-1">
+      You are invited to play <span class="game-title">&ldquo;Keep Talking and Nobody Explodes&rdquo;</span> with Guido on
+      <span id="date-placeholder" class="date-tag">DATE: TBD</span>!
+      <span class="headline-note">You and Guido can coordinate the date.</span>
+    </h1>
+  </section>
+
+  <section class="manual" aria-labelledby="manual-heading">
+    <div class="manual-stamp" aria-hidden="true">CLASSIFIED</div>
+    <h2 id="manual-heading" class="manual-title">DEFUSAL MANUAL // FAQ</h2>
+
+    <dl class="faq-list">
+      <div class="faq-item">
+        <dt>What is &ldquo;Keep Talking and Nobody Explodes&rdquo;?</dt>
+        <dd>A co-op party game! One person (the Defuser) sits at a virtual bomb with no idea how to defuse it. The other person (the Expert) reads the bomb-defusal manual out loud and tells the Defuser what to do. The person with the bomb can't see the manual. The person with the manual can't see the bomb. Work together and keep talking, or the bomb explodes.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>What happens if I stop talking?</dt>
+        <dd>You explode. Probably. Unless you and Guido can communicate through thoughts. Which has happened before so maybee.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>How do I play?</dt>
+        <dd>Guido has the game downloaded on his computer. Only the player with the bomb needs to have the game. Guido can share the game with you so you guys can take turns defusing the bomb.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Will it be fun?</dt>
+        <dd>Yes! Hopefully... <small>I really hope so.</small></dd>
+      </div>
+      <div class="faq-item">
+        <dt>How do I RSVP?</dt>
+        <dd>Click the RSVP button below to get the link to the Google Meet!</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="rsvp-section" aria-labelledby="rsvp-heading">
+    <h2 id="rsvp-heading" class="visually-hidden">RSVP</h2>
+    <div class="rsvp-wrapper">
+      <button id="rsvp-btn" class="btn-detonate" type="button">RSVP — I'm In</button>
+    </div>
+    <p class="meet-fallback">Or copy the link directly: <span id="meet-link-text" class="selectable-link"></span></p>
+  </section>
+
+  <section class="tutorial-section" aria-labelledby="tutorial-heading">
+    <p class="eyebrow">// OPTIONAL</p>
+    <h2 id="tutorial-heading" class="section-title">Curious what it looks like? <br>(Headset shown is not needed)</h2>
+    <a class="btn-preview" href="https://www.youtube.com/watch?v=W3HKwdr3vL8" target="_blank" rel="noopener">Game Preview</a>
+  </section>
+
+  <footer class="invite-footer">
+    <p>// END TRANSMISSION</p>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

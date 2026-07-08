@@ -1,0 +1,543 @@
+/* ==================================================================
+   KTANE Date Night Invitation — theme
+   ================================================================== */
+
+:root {
+  --font-display: 'Black Ops One', Impact, 'Arial Narrow', sans-serif;
+  --font-mono: 'Share Tech Mono', Consolas, 'Courier New', monospace;
+
+  --bg-void: #0a0a0c;
+  --bg-panel: #16171a;
+  --bg-panel-2: #1e2023;
+  --steel: #2b2e33;
+  --steel-light: #4b4f57;
+  --grid-line: rgba(255, 100, 40, 0.08);
+  --grid-line-faint: rgba(255, 100, 40, 0.05);
+
+  --red-warn: #ff3b30;
+  --red-glow: #ff5a3c;
+  --amber: #ffb020;
+  --amber-glow: #ffcf5c;
+  --led-green: #39ff6a;
+
+  --text-primary: #e8e6df;
+  --text-muted: #9a9a92;
+  --manual-paper: #d8d2bd;
+  --manual-paper-2: #cfc7ac;
+  --manual-ink: #26221a;
+  --manual-ink-muted: #55503f;
+
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-quick: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+}
+
+* , *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.locked { overflow: hidden; height: 100vh; }
+
+img, svg { max-width: 100%; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: -60px; left: 8px;
+  z-index: 200;
+  background: var(--amber);
+  color: var(--manual-ink);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: top var(--dur-quick) var(--ease-soft);
+}
+.skip-link:focus { top: 8px; }
+
+/* ------------------------------------------------------------------
+   BOMB STAGE
+   ------------------------------------------------------------------ */
+
+#bomb-stage {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  background: radial-gradient(ellipse at 50% 40%, #1c1414 0%, var(--bg-void) 62%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity var(--dur-slow) var(--ease-soft), transform var(--dur-slow) var(--ease-soft);
+  transition-delay: 100ms;
+}
+
+#bomb-stage.dismiss {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 48px);
+}
+.grid-overlay--faint {
+  background-image:
+    repeating-linear-gradient(0deg, var(--grid-line-faint) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(90deg, var(--grid-line-faint) 0 1px, transparent 1px 48px);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 180px 40px rgba(0,0,0,0.85);
+}
+
+.bomb-stage-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 24px;
+  text-align: center;
+}
+
+.bomb-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--red-warn);
+  animation: eyebrowBlink 2.4s steps(1) infinite;
+}
+@keyframes eyebrowBlink { 0%, 85% { opacity: 1; } 90% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.bomb-trigger {
+  background: none;
+  border: none;
+  padding: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bomb-trigger:focus-visible {
+  outline: 2px dashed var(--amber);
+  outline-offset: 8px;
+  border-radius: 50%;
+}
+
+#bomb-svg { display: block; overflow: visible; }
+
+#bomb-group {
+  transform-box: fill-box;
+  transform-origin: 50% 55%;
+  animation: bombIdle 3s ease-in-out infinite;
+}
+@keyframes bombIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+#bomb-shadow {
+  transition: transform var(--dur-base) var(--ease-soft), opacity var(--dur-base);
+}
+
+.led-text {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  fill: var(--red-warn);
+  filter: drop-shadow(0 0 4px rgba(255,59,48,0.7));
+}
+.led-colon { animation: ledBlink 1s steps(1) infinite; }
+@keyframes ledBlink { 50% { opacity: 0.15; } }
+
+.flame { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* armed = hovered or focused */
+.bomb-trigger.armed #bomb-group {
+  animation-play-state: paused;
+  transform: scale(1.14) translateY(-20px);
+  transition: transform var(--dur-base) var(--ease-bounce);
+}
+.bomb-trigger.armed #bomb-shadow {
+  transform: scale(1.35);
+  opacity: 0.8;
+  filter: blur(2px);
+}
+.bomb-trigger.armed #flame-group {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px var(--amber-glow));
+  transition: opacity var(--dur-quick);
+}
+.bomb-trigger.armed .flame-outer { animation: flicker 260ms ease-in-out infinite; }
+.bomb-trigger.armed .flame-inner { animation: flicker 180ms ease-in-out infinite reverse; }
+.bomb-trigger.armed .spark { animation: sparkPop 900ms ease-out infinite; }
+.bomb-trigger.armed .spark-2 { animation-delay: 0.2s; }
+.bomb-trigger.armed .spark-3 { animation-delay: 0.5s; }
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  25% { transform: scale(1.08, 0.94) rotate(3deg); filter: brightness(1.15); }
+  50% { transform: scale(0.94, 1.06) rotate(-4deg); filter: brightness(0.9); }
+  75% { transform: scale(1.05, 0.95) rotate(2deg); }
+}
+@keyframes sparkPop {
+  0% { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--spark-dx, 6px), var(--spark-dy, -10px)) scale(0); opacity: 0; }
+}
+
+/* pre-explosion shake */
+.bomb-trigger.exploding #bomb-group {
+  animation: preShake 150ms ease-in-out;
+}
+@keyframes preShake {
+  0%, 100% { transform: translate(0,0); }
+  25% { transform: translate(-3px, 1px); }
+  50% { transform: translate(3px, -1px); }
+  75% { transform: translate(-2px, 2px); }
+}
+
+.bomb-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* explosion effects */
+#explosion-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at var(--origin-x, 50%) var(--origin-y, 50%),
+    #fff 0%, var(--amber-glow) 30%, var(--red-glow) 55%, transparent 75%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 110;
+}
+#explosion-flash.flash-active { animation: flashPop 500ms ease-out forwards; }
+@keyframes flashPop {
+  0% { opacity: 0; transform: scale(0.3); }
+  10% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+#shockwave {
+  position: fixed;
+  left: var(--origin-x, 50%);
+  top: var(--origin-y, 50%);
+  width: 40px; height: 40px;
+  margin-left: -20px; margin-top: -20px;
+  border-radius: 50%;
+  border: 40px solid var(--amber-glow);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 109;
+}
+#shockwave.shockwave-active { animation: shockwavePop 550ms ease-out forwards; }
+@keyframes shockwavePop {
+  from { transform: scale(0); opacity: 0.8; border-width: 40px; }
+  to { transform: scale(9); opacity: 0; border-width: 0; }
+}
+
+#particle-field { position: fixed; inset: 0; pointer-events: none; z-index: 108; }
+.particle {
+  position: fixed;
+  left: 0; top: 0;
+  width: var(--size, 6px); height: var(--size, 6px);
+  border-radius: 50%;
+  background: hsl(var(--hue, 30) 100% 55%);
+  transform: translate(0,0) scale(1);
+  opacity: 1;
+  animation: particleBurst 650ms ease-out var(--delay, 0ms) forwards;
+}
+@keyframes particleBurst {
+  to { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px,0,0); }
+  20%, 80% { transform: translate3d(4px,0,0); }
+  30%, 50%, 70% { transform: translate3d(-8px,0,0); }
+  40%, 60% { transform: translate3d(8px,0,0); }
+}
+body.shake { animation: shake 550ms cubic-bezier(0.36,0.07,0.19,0.97); }
+
+/* ------------------------------------------------------------------
+   INVITATION
+   ------------------------------------------------------------------ */
+
+#invitation {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg-void);
+  padding: 72px 20px 100px;
+  overflow: hidden;
+}
+
+.invite-hero {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin: 0 0 18px;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 5vw, 46px);
+  line-height: 1.35;
+  margin: 0;
+  color: var(--text-primary);
+}
+.headline:focus { outline: none; }
+
+.game-title { color: var(--red-glow); }
+
+.headline-note {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.35em;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.date-tag {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: var(--amber-glow);
+  border-bottom: 3px dashed var(--amber);
+  padding-bottom: 2px;
+}
+
+.manual {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto 56px;
+  background: var(--manual-paper);
+  color: var(--manual-ink);
+  border: 2px dashed var(--manual-ink-muted);
+  border-radius: 8px;
+  padding: 40px clamp(20px, 5vw, 48px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.manual-stamp {
+  position: absolute;
+  top: 18px;
+  right: clamp(10px, 3vw, 28px);
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  color: var(--red-warn);
+  border: 3px solid var(--red-warn);
+  border-radius: 4px;
+  padding: 4px 10px;
+  transform: rotate(8deg);
+  opacity: 0.75;
+}
+
+.manual-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: 0.04em;
+  margin: 0 0 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--manual-ink-muted);
+}
+
+.faq-list {
+  margin: 0;
+  counter-reset: faq;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.faq-item { counter-increment: faq; }
+
+.faq-item dt {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+.faq-item dt::before {
+  content: '// ' counter(faq, decimal-leading-zero) '  ';
+  color: var(--red-warn);
+}
+
+.faq-item dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--manual-ink-muted);
+}
+
+.rsvp-section {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.rsvp-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-detonate {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, var(--red-glow), var(--red-warn));
+  border: none;
+  border-radius: 6px;
+  padding: 18px 40px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 #a3241c, 0 16px 30px rgba(255,59,48,0.35);
+  transition: transform var(--dur-quick) var(--ease-soft);
+}
+.btn-detonate:hover { transform: translateY(-2px); }
+.btn-detonate:active { transform: translateY(2px); box-shadow: 0 4px 0 #a3241c, 0 10px 20px rgba(255,59,48,0.3); }
+.btn-detonate:focus-visible { outline: 3px dashed var(--amber); outline-offset: 4px; }
+
+@keyframes detonatePulse {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.92); }
+  55% { transform: scale(1.12); box-shadow: 0 0 0 0 var(--red-glow), 0 8px 0 #a3241c; }
+  100% { transform: scale(1); box-shadow: 0 0 40px 10px transparent, 0 8px 0 #a3241c; }
+}
+.btn-detonate.detonate-pulse { animation: detonatePulse 500ms var(--ease-bounce); }
+
+.meet-fallback {
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.selectable-link {
+  color: var(--amber-glow);
+  word-break: break-all;
+  user-select: all;
+}
+
+.tutorial-section {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 72px auto 0;
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(18px, 2.6vw, 24px);
+  letter-spacing: 0.03em;
+  margin: 0 0 24px;
+  color: var(--text-primary);
+}
+
+.btn-preview {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  color: var(--bg-void);
+  background: linear-gradient(180deg, var(--amber-glow), var(--amber));
+  border-radius: 6px;
+  padding: 16px 36px;
+  text-decoration: none;
+  box-shadow: 0 8px 0 #a86e0f, 0 16px 30px rgba(255, 176, 32, 0.25);
+  transition: transform var(--dur-quick) var(--ease-soft);
+}
+.btn-preview:hover { transform: translateY(-2px); }
+.btn-preview:active { transform: translateY(2px); box-shadow: 0 4px 0 #a86e0f, 0 10px 20px rgba(255, 176, 32, 0.2); }
+.btn-preview:focus-visible { outline: 3px dashed var(--text-primary); outline-offset: 4px; }
+
+.invite-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-top: 64px;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------------
+   RESPONSIVE
+   ------------------------------------------------------------------ */
+
+@media (max-width: 480px) {
+  #bomb-svg { width: 220px; height: 220px; }
+  .manual { padding: 28px 20px; }
+  .btn-detonate { width: 100%; }
+}
+
+/* ------------------------------------------------------------------
+   REDUCED MOTION
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  #bomb-group,
+  .led-colon,
+  .bomb-eyebrow,
+  .bomb-trigger.armed .flame-outer,
+  .bomb-trigger.armed .flame-inner,
+  .bomb-trigger.armed .spark,
+  .bomb-trigger.exploding #bomb-group,
+  body.shake,
+  .btn-detonate.detonate-pulse {
+    animation: none !important;
+  }
+  #bomb-stage { transition-delay: 0ms; }
+}
